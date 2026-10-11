@@ -35,6 +35,8 @@ If you edit and then revert inside the same cycle, still write the cycle. Surfac
 
 Emit once. Last message of the loop. No sentence after it.
 
+`N considered` counts cycles 1 onward, the same unit as the cap. Cycle 0 is not in it.
+
 ```
 PEAK
 objective (final): vN — one sentence, plus assumptions still in force

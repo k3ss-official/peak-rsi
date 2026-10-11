@@ -4,11 +4,14 @@ description: >
   Recursive self-improvement loop for a single objective. Sharpen the
   objective, attack the deliverable with a hostile critic, close exactly one
   defect per cycle, and stop only when another cycle would not change a
-  competent ship decision. Use when the user says peak, RSI, recursive
-  self-improvement, improve until you can't, peak version, maximum version,
-  or asks a coding assistant to recursively improve a task, project, or
-  deliverable until it is at its best.
-version: 1.0.0
+  competent ship decision. Use when the user says peak or peak-rsi,
+  recursive self-improvement (RSI), improve until you can't, peak version,
+  or maximum version, or asks a coding assistant to recursively improve a
+  task, project, or deliverable until it is at its best. Not for RSI the
+  trading indicator, and not for peak in its everyday sense (peak hours,
+  peak load).
+metadata:
+  version: "1.1.0"
 ---
 
 # PEAK
@@ -39,7 +42,7 @@ A cycle that "improves" all three at once is unfocused. Select one defect.
 
 Read `references/cycle-zero.md` if the ask is vague. Otherwise:
 
-- If the user already gave a falsifiable bar, write `objective: accepted as given` and do not rewrite it for sport.
+- If the user already gave a falsifiable bar, the cycle 0 receipt says `objective: v1 -> v1` and `defect: none — accepted as given`. Do not rewrite it for sport.
 - If they did not, rewrite it into: outcome (observable), bar (checkable), non-goals, evidence, assumptions.
 - Assumptions are decisions. Log them. Ask a question only when a missing fact would fork the architecture and the wrong fork is expensive to reverse. One question. Then continue. Never a questionnaire.
 - Vague words (`better`, `modern`, `robust`, `clean`, `polished`, `intuitive`, `seamless`) are defects in the objective, not permission to restyle.
@@ -48,7 +51,7 @@ Cycle 0's only legal artifact change is none.
 
 ## The loop
 
-Hard cap: **8 cycles**. The cap is a rail, not a target. Most work should peak in 3–5. At the cap, stop anyway and emit the certificate with `capped: true` and the single next defect you would have taken.
+Hard cap: **8 cycles after cycle 0**. Cycle 0 does not count toward the cap. A rejected attempt does. The cap is a rail, not a target. Most work should peak in 3–5. If the gate after cycle 8 has not cleared, stop anyway and emit the certificate with `capped: true` and the single next defect you would have taken. If it has cleared, that is an ordinary stop: `capped: false`.
 
 Each cycle, in this order. Do not skip.
 
@@ -80,7 +83,7 @@ Priority: ship-block correctness, security, data loss, and a lying or broken pri
 
 Smallest change that fully closes that defect.
 
-- Objective defect: revise the objective so it is stricter or clearer, never looser. Diff it. If any sentence became easier to satisfy, revert — that is a reward hack. Do not also edit the artifact in this cycle unless the new bar shows the artifact already fails, in which case the objective revision is the reason and the artifact fix is the edit.
+- Objective defect: revise the objective so it is stricter or clearer, never looser. Diff it. If any sentence became easier to satisfy, revert — that is a reward hack. Do not also edit the artifact in this cycle unless the new bar shows the artifact already fails, in which case the objective revision is the reason and the artifact fix is the edit. That cycle's receipt says `surface: objective` and shows the version change on the `objective:` line.
 - Harness defect: add, narrow, or delete one check. Leave the artifact frozen.
 - Artifact defect: close it. No "while I'm here."
 
@@ -104,9 +107,9 @@ objective: vX -> vY
 surface: objective | harness | artifact
 defect: D-id (severity) — one sentence
 evidence: what you ran or traced, and what it showed
-rejected: what you considered and did not take, or "none"
-harness: unchanged | added | removed
-residual: what remains open, or "none at ship-block/high"
+rejected: what you considered and did not take, or none
+harness: unchanged | added H-id: check | removed H-id: why
+residual: what remains open, or none at ship-block/high
 ```
 
 ### 8. Stop gate
@@ -117,7 +120,7 @@ Stop only if **all** of these are true. Read `references/stop-gate.md` if you fe
 2. You can name the next candidate defect, and it is taste, out of scope, or not worth the cost. Name it.
 3. This cycle did not weaken the objective, the tests, or the critic.
 4. The last close has real verification, not a summary.
-5. A colder second read agrees: another cycle would not change a competent reviewer's ship decision.
+5. A colder second read agrees: another cycle would not change a competent reviewer's ship decision. If your harness lets you start a fresh-context reviewer (a subagent that has not seen your ledger), give it the objective and the artifact and ask it that question. Otherwise reread both as if you had not written them. Say in the gate which kind of read it was.
 
 If any item fails, start the next cycle. If all pass, emit the certificate and stop talking.
 
@@ -127,12 +130,12 @@ The last thing you write. No preamble, no offer to keep going.
 
 ```
 PEAK
-objective (final): ...
-cycles: N   (edits, rejects, cap)
-closed: [ids]
-rejected on purpose: ...
-still true: ...   (honest residuals, not a disguised todo you should have done)
-why another cycle won't pay: ...
+objective (final): vN — one sentence, plus assumptions still in force
+cycles: N considered, R rejected, E artifact edits
+closed: defect ids, each verified in some receipt
+rejected on purpose: rejected ids, one line each
+still true: honest residuals, not a disguised todo you should have done
+why another cycle won't pay: the declined candidate, and why
 capped: false
 ```
 
