@@ -26,10 +26,10 @@ Say: "Use peak. Improve until you can't."
 
 Release asset, folder name included so it unzips as `peak-rsi/`:
 
-https://github.com/k3ss-official/peak-rsi/releases/download/v1.0.0/peak-rsi.zip
+https://github.com/k3ss-official/peak-rsi/raw/main/dist/peak-rsi.zip
 
 ```sh
-curl -fsSL -o /tmp/peak-rsi.zip https://github.com/k3ss-official/peak-rsi/releases/download/v1.0.0/peak-rsi.zip
+curl -fsSL -o /tmp/peak-rsi.zip https://github.com/k3ss-official/peak-rsi/raw/main/dist/peak-rsi.zip
 unzip -o /tmp/peak-rsi.zip -d ~/.agents/skills
 # then run install.sh from the clone, or symlink by hand using the table
 ```
@@ -42,7 +42,7 @@ Prefer the git install. The zip has no `.git`, so it will not update.
 | --- | --- | --- |
 | Skill | 1.0.0 | `SKILL.md` frontmatter. The loop. |
 | Install guide | 2026-10-11 | This file. Paths below were checked against vendor docs on that date. |
-| Release | v1.0.0 | Git tag and the zip asset. |
+| Release | v1.0.0 | Tag is the skill version. The zip is committed at `dist/peak-rsi.zip`. |
 
 Paths move. If a directory in the table is empty on a newer build, install the canonical copy and symlink it to wherever that assistant's current docs say.
 
