@@ -33,9 +33,9 @@ If you catch yourself here, revert, record `rejected`, and run the gate honestly
 
 ## The cap
 
-After the receipt for cycle 8, stop even if the gate is not clean. Cycle 0 does not count toward the cap. A rejected attempt does.
+After the receipt for cycle 8, stop even if the gate is not clean. Cycle 0 does not count toward the cap. A rejected attempt does. If the gate after cycle 8 is clean, the stop is ordinary and `capped: false`.
 
-Certificate fields:
+Certificate fields when the gate is not clean:
 
 - `capped: true`
 - `still true:` starts with the ship-block or high defect you would have taken on cycle 9.

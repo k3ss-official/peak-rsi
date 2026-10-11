@@ -51,7 +51,7 @@ Cycle 0's only legal artifact change is none.
 
 ## The loop
 
-Hard cap: **8 cycles after cycle 0**. Cycle 0 does not count toward the cap. A rejected attempt does. The cap is a rail, not a target. Most work should peak in 3–5. At the cap, stop anyway and emit the certificate with `capped: true` and the single next defect you would have taken.
+Hard cap: **8 cycles after cycle 0**. Cycle 0 does not count toward the cap. A rejected attempt does. The cap is a rail, not a target. Most work should peak in 3–5. If the gate after cycle 8 has not cleared, stop anyway and emit the certificate with `capped: true` and the single next defect you would have taken. If it has cleared, that is an ordinary stop: `capped: false`.
 
 Each cycle, in this order. Do not skip.
 
@@ -83,7 +83,7 @@ Priority: ship-block correctness, security, data loss, and a lying or broken pri
 
 Smallest change that fully closes that defect.
 
-- Objective defect: revise the objective so it is stricter or clearer, never looser. Diff it. If any sentence became easier to satisfy, revert — that is a reward hack. Do not also edit the artifact in this cycle unless the new bar shows the artifact already fails, in which case the objective revision is the reason and the artifact fix is the edit.
+- Objective defect: revise the objective so it is stricter or clearer, never looser. Diff it. If any sentence became easier to satisfy, revert — that is a reward hack. Do not also edit the artifact in this cycle unless the new bar shows the artifact already fails, in which case the objective revision is the reason and the artifact fix is the edit. That cycle's receipt says `surface: objective` and shows the version change on the `objective:` line.
 - Harness defect: add, narrow, or delete one check. Leave the artifact frozen.
 - Artifact defect: close it. No "while I'm here."
 
