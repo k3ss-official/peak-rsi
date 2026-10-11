@@ -3,13 +3,15 @@ description: >
   PEAK recursive self-improvement. Apply when the user says peak, RSI,
   improve until you can't, peak version, maximum version, or asks to
   recursively improve a deliverable until it is at its best. Read
-  peak-rsi/SKILL.md and follow it. Do not weaken the objective to stop.
+  ~/.cursor/skills/peak-rsi/SKILL.md if that file exists, otherwise
+  .cursor/skills/peak-rsi/SKILL.md, and follow it. Do not weaken the
+  objective to stop.
 alwaysApply: false
 ---
 
 # PEAK
 
-When this rule applies, you are under `peak-rsi/SKILL.md`.
+When this rule applies, follow the `SKILL.md` named in the description. That file is the law. A relative `peak-rsi/SKILL.md` in the project is not the skill unless one of those two paths is missing and this path exists.
 
 Before editing the product, run cycle 0. Then loop: state, critic, select one in-scope defect, smallest fix, verify with evidence, harness delta, receipt, stop gate.
 
@@ -17,4 +19,4 @@ Severities that may open a cycle: ship-block and high. Taste does not. A test or
 
 Hard cap 8 cycles. Stop on the five-part can't test, then emit the PEAK certificate and do not continue.
 
-References, in the same folder: `references/cycle-zero.md`, `references/critic.md`, `references/harness.md`, `references/stop-gate.md`, `references/forbidden.md`, `references/example-ledger.md`.
+References sit next to that `SKILL.md`: `references/cycle-zero.md`, `references/critic.md`, `references/harness.md`, `references/stop-gate.md`, `references/forbidden.md`, `references/example-ledger.md`.

@@ -14,7 +14,7 @@ You are in the right place. Install it globally, then stop. Do not edit the user
 curl -fsSL https://raw.githubusercontent.com/k3ss-official/peak-rsi/main/install.sh | sh
 ```
 
-That clones this repo to `~/.agents/skills/peak-rsi` and symlinks that folder into the other global skill directories below. Re-running it fast-forwards the clone. It will not replace a real directory that is already at one of those paths.
+That clones this repo to `~/.agents/src/peak-rsi` and links `~/.agents/skills/peak-rsi` at the `peak-rsi/` folder inside the checkout, which is where `SKILL.md` sits. Other global skill directories get the same link. Re-running it fast-forwards the checkout. An older install that cloned the repo directly into `~/.agents/skills/peak-rsi` is moved to `~/.agents/src/peak-rsi` and linked. It will not overwrite any other real directory that is already in a skill slot.
 
 Then tell the person to open a **new** session. Skills are read at session start.
 
@@ -42,7 +42,7 @@ Prefer the git install. The zip has no `.git`, so it will not update.
 | --- | --- | --- |
 | Skill | 1.0.0 | `SKILL.md` frontmatter. The loop. |
 | Install guide | 2026-10-11 | This file. Paths below were checked against vendor docs on that date. |
-| Release | v1.0.0 | Tag is the skill version. The zip is committed at `dist/peak-rsi.zip`. |
+| Release | v1.0.1 | Git tag for this install layout. On 2026-10-11, `gh skill install` with no pin used `main` when the repo had a tag but no GitHub Release. The zip is `dist/peak-rsi.zip` on main. The loop in `SKILL.md` is still version 1.0.0. |
 
 Paths move. If a directory in the table is empty on a newer build, install the canonical copy and symlink it to wherever that assistant's current docs say.
 
@@ -59,7 +59,7 @@ Windows: the same folders under `%USERPROFILE%`. Use Git Bash or WSL for `instal
 | Cursor | `~/.cursor/skills/peak-rsi` | `/peak-rsi` in Agent chat | Also reads `~/.agents/skills`, `~/.claude/skills`, and `~/.codex/skills`. Cloud Agents only sync `~/.cursor/skills` after Sync Skills is on. |
 | Claude Code | `~/.claude/skills/peak-rsi` | `/peak-rsi` | Personal skills, every project on this machine. Not Claude.ai cloud. Confirm with `/skills`. New session. |
 | Hermes | `~/.hermes/skills/peak-rsi` | `/peak-rsi` | Flat folder, not a category subfolder. Or `hermes skills install` on the raw `SKILL.md` URL; the clone is safer because it brings `references/`. New session, or `/reset`. |
-| GitHub Copilot | `~/.copilot/skills/peak-rsi` | Agent picks it up from the description | Also reads `~/.agents/skills`. `gh` v2.90.0+ can install with `gh skill install k3ss-official/peak-rsi peak-rsi --agent copilot --scope user`. |
+| GitHub Copilot | `~/.copilot/skills/peak-rsi` | Agent picks it up from the description | Also reads `~/.agents/skills`. `gh` v2.90.0+ can install with `gh skill install k3ss-official/peak-rsi peak-rsi --agent github-copilot --scope user`. |
 | Gemini CLI | `~/.gemini/skills/peak-rsi` | Description match | Project copies use `.agents/skills` or `.gemini/skills`. |
 | OpenCode | `~/.config/opencode/skills/peak-rsi` | `skill` tool | Also reads `~/.claude/skills` and `~/.agents/skills`. |
 | Windsurf | `~/.codeium/windsurf/skills/peak-rsi` | Description match | |
@@ -83,19 +83,21 @@ Windows: the same folders under `%USERPROFILE%`. Use Git Bash or WSL for `instal
 Replace `TARGET` with the global folder from the table.
 
 ```sh
-git clone --depth 1 https://github.com/k3ss-official/peak-rsi.git "$TARGET/peak-rsi"
+git clone --depth 1 https://github.com/k3ss-official/peak-rsi.git "$HOME/.agents/src/peak-rsi"
+ln -sfn "$HOME/.agents/src/peak-rsi/peak-rsi" "$TARGET/peak-rsi"
 ```
 
 Codex, if you only want the legacy path:
 
 ```sh
-git clone --depth 1 https://github.com/k3ss-official/peak-rsi.git ~/.codex/skills/peak-rsi
+git clone --depth 1 https://github.com/k3ss-official/peak-rsi.git "$HOME/.agents/src/peak-rsi"
+ln -sfn "$HOME/.agents/src/peak-rsi/peak-rsi" ~/.codex/skills/peak-rsi
 ```
 
 Hermes, from inside Hermes, if you would rather not clone by hand:
 
 ```
-hermes skills install https://raw.githubusercontent.com/k3ss-official/peak-rsi/main/SKILL.md --name peak-rsi
+hermes skills install https://raw.githubusercontent.com/k3ss-official/peak-rsi/main/peak-rsi/SKILL.md --name peak-rsi
 ```
 
 The clone is the one that keeps `references/` and `templates/` next to `SKILL.md`. Use that.
@@ -108,7 +110,7 @@ gh skill install k3ss-official/peak-rsi peak-rsi --agent cursor --scope user
 gh skill install k3ss-official/peak-rsi peak-rsi --agent codex --scope user
 ```
 
-Needs `gh` v2.90.0 or newer. The repo root is the skill, so the skill name is `peak-rsi`.
+Needs `gh` v2.90.0 or newer. The skill name is `peak-rsi`. `gh skill` only discovers a skill under a directory (`peak-rsi/SKILL.md`), so that is where the law lives. Do not clone the repo root onto a skill path. That nests it as `peak-rsi/peak-rsi/SKILL.md` and the agent will not load it.
 
 ## This project only
 
@@ -140,12 +142,15 @@ Hard cap is 8 cycles. It is a rail. Most tasks should peak in 3 to 5. The law is
 ## Layout
 
 ```
-peak-rsi/
-  SKILL.md
+peak-rsi/                  # this repository
+  README.md                # this file, also copied in the skill folder
   install.sh
-  README.md
-  references/
-  templates/cursor-rule.mdc
+  peak-rsi/
+    SKILL.md
+    install.sh
+    references/
+    templates/cursor-rule.mdc
+  dist/peak-rsi.zip        # unpacks as peak-rsi/
 ```
 
 Cursor users who cannot load a skill folder: copy `templates/cursor-rule.mdc` to `~/.cursor/rules/peak-rsi.mdc` or the project's `.cursor/rules/`. The skill folder is the better install.

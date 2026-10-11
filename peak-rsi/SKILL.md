@@ -6,8 +6,8 @@ description: >
   defect per cycle, and stop only when another cycle would not change a
   competent ship decision. Use when the user says peak, RSI, recursive
   self-improvement, improve until you can't, peak version, maximum version,
-  keep going, or asks a coding assistant to recursively improve a task,
-  project, or deliverable until it is at its best.
+  or asks a coding assistant to recursively improve a task, project, or
+  deliverable until it is at its best.
 version: 1.0.0
 ---
 
