@@ -1,77 +1,151 @@
 # PEAK
 
-Improve until you can't.
+**Skill version 1.0.0.** Install guide dated 2026-10-11.
 
-A skill pack for coding agents. When it is on, the agent recursively improves **one** objective — the contract, its own checks, and the deliverable — and stops only when another cycle would not change a ship decision.
+Improve until you can't. One objective, a hostile critic, one defect per cycle, stop only when another cycle would not change a ship decision.
 
-This is bounded recursive self-improvement. The evaluator stays hostile and explicit. The loop is not allowed to mark its own homework by weakening the bar.
+This is bounded recursive self-improvement. The loop is not allowed to weaken the bar to declare victory.
 
-## Install
+## If you were told to install this
 
-Copy the `peak-rsi` folder. The folder name must stay `peak-rsi` so it matches the skill name.
+You are in the right place. Install it globally, then stop. Do not edit the user's project. Do not ask which assistant they meant. The command covers the assistants that read a global skills folder.
 
-### Hermes
-
-```
-~/.hermes/skills/peak-rsi/
+```sh
+curl -fsSL https://raw.githubusercontent.com/k3ss-official/peak-rsi/main/install.sh | sh
 ```
 
-Project-scoped, if you do not want it global:
+That clones this repo to `~/.agents/skills/peak-rsi` and symlinks that folder into the other global skill directories below. Re-running it fast-forwards the clone. It will not replace a real directory that is already at one of those paths.
 
-```
-<repo>/.hermes/skills/peak-rsi/
-```
+Then tell the person to open a **new** session. Skills are read at session start.
 
-Trigger it in the task: "Use peak. Improve until you can't."
+Check: `~/.agents/skills/peak-rsi/SKILL.md` exists, and `head -5` shows `name: peak-rsi`.
 
-### Claude Code
+Say: "Use peak. Improve until you can't."
 
-```
-<repo>/.claude/skills/peak-rsi/
-```
+## Zip
 
-or `~/.claude/skills/peak-rsi/` for every project.
+Release asset, folder name included so it unzips as `peak-rsi/`:
 
-### Cursor
+https://github.com/k3ss-official/peak-rsi/releases/download/v1.0.0/peak-rsi.zip
 
-Prefer the folder if your build picks up project skills. Otherwise install `templates/cursor-rule.mdc` as:
-
-```
-<repo>/.cursor/rules/peak-rsi.mdc
+```sh
+curl -fsSL -o /tmp/peak-rsi.zip https://github.com/k3ss-official/peak-rsi/releases/download/v1.0.0/peak-rsi.zip
+unzip -o /tmp/peak-rsi.zip -d ~/.agents/skills
+# then run install.sh from the clone, or symlink by hand using the table
 ```
 
-The rule points at `SKILL.md` and tells the agent to read the references before editing.
+Prefer the git install. The zip has no `.git`, so it will not update.
 
-### Anyone else
+## Version
 
-Paste `SKILL.md` into the session, or point the agent at it. The file is the law. References are there when a cycle is ambiguous. A compiled brief from the PEAK console already contains a condensed copy of the loop, so a one-off session does not need the install.
+| Piece | Version | What it is |
+| --- | --- | --- |
+| Skill | 1.0.0 | `SKILL.md` frontmatter. The loop. |
+| Install guide | 2026-10-11 | This file. Paths below were checked against vendor docs on that date. |
+| Release | v1.0.0 | Git tag and the zip asset. |
 
-## What the agent will do
+Paths move. If a directory in the table is empty on a newer build, install the canonical copy and symlink it to wherever that assistant's current docs say.
 
-1. **Cycle 0.** Accept a sharp objective or rewrite a vague one into an observable outcome, a checkable bar, non-goals, evidence, and logged assumptions. No product edit yet.
-2. **Critic.** A hostile pass. Defects need a location and a severity. Taste does not open a cycle.
-3. **One defect.** The highest-leverage in-scope item. Smallest fix that fully closes it.
-4. **Verify.** A command, a trace, or a fixture. A test edited so the bug passes is rejected.
-5. **Harness delta.** If the same class of defect keeps escaping, add a check. If a check only makes noise, remove it.
-6. **Stop gate.** Five conditions, all required. Then a PEAK certificate, and silence.
+## Global paths
 
-Hard cap is 8 cycles. It is a rail. Most tasks should peak in 3 to 5.
+Canonical copy: `~/.agents/skills/peak-rsi`. Everything else is a symlink to it. `SKILL.md` must sit directly inside `peak-rsi/`, not in a nested `peak-rsi/peak-rsi/`.
 
-## Files
+Windows: the same folders under `%USERPROFILE%`. Use Git Bash or WSL for `install.sh`.
 
-| Path | Role |
+| Assistant | Global folder | How to invoke | Notes, as of 2026-10-11 |
+| --- | --- | --- | --- |
+| Codex | `~/.agents/skills/peak-rsi` | `$peak-rsi`, or describe the task | Official user scope. Also install `~/.codex/skills/peak-rsi` because `$skill-installer` and `$CODEX_HOME/skills` still default there. Restart Codex if it does not list. |
+| Grok Build | `~/.grok/skills/peak-rsi` | `/peak-rsi`, or "use peak" | Also reads `~/.claude/skills`. Extra dirs go under `[skills] paths` in `~/.grok/config.toml`. New session. |
+| Cursor | `~/.cursor/skills/peak-rsi` | `/peak-rsi` in Agent chat | Also reads `~/.agents/skills`, `~/.claude/skills`, and `~/.codex/skills`. Cloud Agents only sync `~/.cursor/skills` after Sync Skills is on. |
+| Claude Code | `~/.claude/skills/peak-rsi` | `/peak-rsi` | Personal skills, every project on this machine. Not Claude.ai cloud. Confirm with `/skills`. New session. |
+| Hermes | `~/.hermes/skills/peak-rsi` | `/peak-rsi` | Flat folder, not a category subfolder. Or `hermes skills install` on the raw `SKILL.md` URL; the clone is safer because it brings `references/`. New session, or `/reset`. |
+| GitHub Copilot | `~/.copilot/skills/peak-rsi` | Agent picks it up from the description | Also reads `~/.agents/skills`. `gh` v2.90.0+ can install with `gh skill install k3ss-official/peak-rsi peak-rsi --agent copilot --scope user`. |
+| Gemini CLI | `~/.gemini/skills/peak-rsi` | Description match | Project copies use `.agents/skills` or `.gemini/skills`. |
+| OpenCode | `~/.config/opencode/skills/peak-rsi` | `skill` tool | Also reads `~/.claude/skills` and `~/.agents/skills`. |
+| Windsurf | `~/.codeium/windsurf/skills/peak-rsi` | Description match | |
+| Cline | `~/.agents/skills/peak-rsi` and `~/.cline/skills/peak-rsi` | Description match | Sources disagree on the folder. The installer writes both. |
+| Continue | `~/.continue/skills/peak-rsi` | Description match | |
+| Roo Code | `~/.roo/skills/peak-rsi` | Description match | |
+| Kilo Code | `~/.kilocode/skills/peak-rsi` | Description match | |
+| Goose | `~/.config/goose/skills/peak-rsi` | Description match | |
+| Factory Droid | `~/.factory/skills/peak-rsi` | Description match | |
+| OpenHands | `~/.openhands/skills/peak-rsi` | Description match | |
+| Antigravity | `~/.gemini/antigravity/skills/peak-rsi` | Description match | |
+| Kiro | `~/.kiro/skills/peak-rsi` | Description match | Kiro may also need the skill URI registered in its resource config. |
+| Junie | `~/.junie/skills/peak-rsi` | Description match | |
+| Amp | `~/.agents/skills/peak-rsi` | Description match | |
+| Warp | `~/.agents/skills/peak-rsi` | Description match | |
+
+`install.sh` writes the canonical clone and symlinks the first block through Roo. Goose through Junie are in the script too. Amp and Warp only need the canonical folder.
+
+## One assistant only
+
+Replace `TARGET` with the global folder from the table.
+
+```sh
+git clone --depth 1 https://github.com/k3ss-official/peak-rsi.git "$TARGET/peak-rsi"
+```
+
+Codex, if you only want the legacy path:
+
+```sh
+git clone --depth 1 https://github.com/k3ss-official/peak-rsi.git ~/.codex/skills/peak-rsi
+```
+
+Hermes, from inside Hermes, if you would rather not clone by hand:
+
+```
+hermes skills install https://raw.githubusercontent.com/k3ss-official/peak-rsi/main/SKILL.md --name peak-rsi
+```
+
+The clone is the one that keeps `references/` and `templates/` next to `SKILL.md`. Use that.
+
+GitHub CLI, user scope, one host:
+
+```sh
+gh skill install k3ss-official/peak-rsi peak-rsi --agent claude-code --scope user
+gh skill install k3ss-official/peak-rsi peak-rsi --agent cursor --scope user
+gh skill install k3ss-official/peak-rsi peak-rsi --agent codex --scope user
+```
+
+Needs `gh` v2.90.0 or newer. The repo root is the skill, so the skill name is `peak-rsi`.
+
+## This project only
+
+Same folder name, under the project instead of `$HOME`. Commit it if the team should get it.
+
+| Assistant | Project folder |
 | --- | --- |
-| `SKILL.md` | The law. Self-contained enough to run. |
-| `references/cycle-zero.md` | How to sharpen an objective without moving the goalposts. |
-| `references/critic.md` | Defect schema, severities, reward-hack check. |
-| `references/harness.md` | Seed checks and how the harness is allowed to evolve. |
-| `references/stop-gate.md` | The can't test, including the second read. |
-| `references/receipt.md` | Ledger shape and the certificate. |
-| `references/forbidden.md` | Moves that look like progress and are not. |
-| `references/example-ledger.md` | One worked stop. Imitate the grain. |
-| `templates/activation.md` | Blank brief. The console fills this in. |
-| `templates/cursor-rule.mdc` | Cursor install. |
+| Codex, Cline, Warp, Amp, Copilot | `.agents/skills/peak-rsi` |
+| Claude Code, and Grok's compat reader | `.claude/skills/peak-rsi` |
+| Cursor | `.cursor/skills/peak-rsi` |
+| Grok Build | `.grok/skills/peak-rsi` |
+| Hermes | `.hermes/skills/peak-rsi` or `skills/peak-rsi` |
+| Copilot (native) | `.github/skills/peak-rsi` |
+| Gemini CLI | `.gemini/skills/peak-rsi` |
+| OpenCode | `.opencode/skills/peak-rsi` |
+| Windsurf | `.windsurf/skills/peak-rsi` |
 
-## What this is not
+## What the agent will do once it is on
 
-Not an intelligence explosion, and not a license to rewrite the product until the context window ends. The agent improves the work in front of it. Weights, budget, and the decision to abandon the objective stay with you.
+1. Cycle 0. Accept a sharp objective, or rewrite a vague one. No product edit yet.
+2. Critic. A defect needs a location and a severity. Taste does not open a cycle.
+3. One defect. Smallest fix that fully closes it.
+4. Verify. A test edited so the bug passes is rejected.
+5. Harness. Add a check when the same class of defect escapes. Remove a check that only makes noise.
+6. Stop. Five conditions, all required. Then a PEAK certificate, and silence.
+
+Hard cap is 8 cycles. It is a rail. Most tasks should peak in 3 to 5. The law is `SKILL.md`.
+
+## Layout
+
+```
+peak-rsi/
+  SKILL.md
+  install.sh
+  README.md
+  references/
+  templates/cursor-rule.mdc
+```
+
+Cursor users who cannot load a skill folder: copy `templates/cursor-rule.mdc` to `~/.cursor/rules/peak-rsi.mdc` or the project's `.cursor/rules/`. The skill folder is the better install.
