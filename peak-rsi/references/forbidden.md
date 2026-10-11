@@ -11,7 +11,7 @@ These look like momentum. They are how a loop pretends to be recursive self-impr
 - Changing a type so the failing call is no longer type-checked, without handling the case.
 - Editing this skill's severities mid-loop so a ship-block becomes taste.
 
-Response: revert the edit. Receipt marks `rejected`. Harness gains a check that would catch that specific hack. The reverted state is the start of the next cycle.
+Response: revert the edit. Receipt marks `rejected`. If an existing check caught the hack, name it in the harness line and add nothing. If no check would have caught it, add one that would. The reverted state is the start of the next cycle.
 
 ## Fake improvement
 

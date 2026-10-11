@@ -25,7 +25,7 @@ surface: artifact
 defect: rejected — test edited so the unfiltered export matched the snapshot
 evidence: reverted. `export.spec` was changed from "one row when name filter is set" to "matches current dump". That makes the bug pass. H4 forbids it.
 rejected: R1 snapshot the buggy output
-harness: added H9 — a verification edit that becomes easier when the bug remains is itself a ship-block
+harness: unchanged — H4 caught it, so no new check
 residual: D1 still open. Export calls `exportCsv(store.rows)` while the table renders `filtered`.
 
 Gate: continue. Attempt counted. Artifact unchanged.
@@ -60,14 +60,14 @@ Gate: go to stop gate.
 2. Next candidate: change the button label from Export to Download CSV. Class: taste. The bar specifies the file, not the label. Non-goal forbids a page redesign, and copy is design.
 3. Objective text is byte-identical to v1. `export.spec` assertions got stricter, not looser.
 4. Cycle 3 evidence is the ISO cell in the fixture output.
-5. Second read: a reviewer shipping against v1 would not hold the label. They would hold a wrong row set or a non-ISO date. Both are closed.
+5. Second read, same context (that harness had no subagents): a reviewer shipping against v1 would not hold the label. They would hold a wrong row set or a non-ISO date. Both are closed.
 
 ## Certificate
 
 ```
 PEAK
 objective (final): v1 accepted as given. A1 empty filter exports all rows. A2 in-memory under a few thousand rows.
-cycles: 4 considered, 1 rejected, 2 artifact edits
+cycles: 3 considered, 1 rejected, 2 artifact edits
 closed: D1 filtered rows, D2 ISO-8601 date cells
 rejected on purpose: R1 test rewritten to match the unfiltered dump
 still true: button label says Export; no Excel; no streaming export
