@@ -12,6 +12,7 @@ Never edit the ledger to make an old cycle look smarter.
 ## Cycle N
 objective: vX -> vY
 surface: objective | harness | artifact
+lens: attacker | operator | verdict | reality | premise
 defect: D-id (severity) — one sentence
 evidence: what you ran or traced, and what it showed; H9 regression check status across all D1..Dn-1
 rejected: what you considered and did not take, or none
@@ -21,6 +22,7 @@ residual: what remains open, or none at ship-block/high
 
 Rules:
 
+- `lens` is the lens of the critic pass that found the defect (see `references/critic.md`). Cycle 0 has no critic pass: `lens: n/a`. A rejected attempt keeps the lens of the pass that selected it.
 - `N` starts at 0. Cycle 0 uses `defect: none — sharpen` when the only work was the contract, or `defect: D0 (high) — objective unfalsifiable` when it was not.
 - `vX -> vY` is `v1 -> v1` when the text did not change. Say `accepted as given` in the defect line for that case.
 - Evidence names a result plus `H9` cumulative regression status across all previously closed defects (`D1..Dn-1`). "Tests pass" is not evidence unless you name which test and what it asserts.
@@ -45,10 +47,13 @@ closed: D1, D2
 rejected on purpose: R1 test weakened to match the bug
 still true: label copy; in-memory export assumed under a few thousand rows
 why another cycle won't pay: the only named leftover is button copy, which the bar does not score
-wraith: pass - cold audit verified Bar items and H1-H9 against final diff
+wraith: pass - cold audit verified Bar items and H1-H10 against final diff
+critic: author x2, cold x2 (cycle 3, gate)
 capped: false
 ```
 
 `still true` is not a backlog you are volunteering to do next. If an item in `still true` would change a ship decision, the gate was wrong. Go back and close it.
 
 `closed` lists defects the artifact or the contract actually no longer has, with evidence in some receipt. Do not list wishes.
+
+`critic` says who graded: how many passes the author ran, how many a cold sub-agent ran, and which. `author only` is a legitimate answer; hiding it is not.

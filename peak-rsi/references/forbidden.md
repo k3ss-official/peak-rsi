@@ -42,6 +42,15 @@ Response: return to cycle 0 rules. One question only on an expensive fork. Other
 
 Response: the certificate is invalid. Run the missing critic or delete the fake cycles from the ledger by marking them `rejected: not actually run`, whichever matches reality. Do not quietly rewrite history.
 
+## Self-grading
+
+- Treating a green script you wrote as proof the mechanism is sound. It scores what a machine can score.
+- Calling that script a cold audit of an artifact that needs judgement.
+- Running every critic pass in one lens, then reporting that the critic found nothing.
+- Leaving a claim the artifact depends on unread and untagged because it sounds right.
+
+Response: name what the check cannot see in `residual`, run the pass again with a different lens or a cold sub-agent, and settle or tag the premise. The certificate's `critic:` line says who graded.
+
 ## Objective laundering
 
 Any edit to the objective whose diff makes a current failure stop counting. The test is a sentence diff, not a vibe. If you cannot show the diff, you do not get to change the objective.

@@ -11,7 +11,7 @@ description: >
   trading indicator, and not for peak in its everyday sense (peak hours,
   peak load).
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # PEAK
@@ -63,9 +63,14 @@ One short block before you edit: objective version, what is frozen, open defects
 
 Separate posture from the author. You are trying to disconfirm, not to defend the last edit. Read `references/critic.md` when you are unsure what counts.
 
+**Name the lens first.** One per pass, never the same twice in a row: `attacker` (how would I break it on purpose), `operator` (3am, no author to ask), `verdict` (can the final check, gate or acceptance rule reject a correct artifact or pass a wrong one — read it as the thing that decides), `reality` (does it survive the real data and environment, not the fixture), `premise` (what does it rest on that nobody read in a primary source). The `verdict` lens must run at least once before the stop gate, and again after any cycle that changed a test, gate or acceptance rule. A critic that keeps one lens stops finding things long before the work is done.
+
+**Cold critic.** On cycles 3 and 6, and at the stop gate, the critic pass is run by a cold sub-agent given only the objective, the harness and the artifact, with no cycle history. If sub-agents are unavailable, say so in that cycle's `evidence`; the certificate's `critic:` line then reads `author only`.
+
 Output only:
 
 - Defects, ranked. Each one: id, surface (`objective` | `harness` | `artifact`), severity (`ship-block` | `high` | `low` | `taste`), where it lives, the change that would close it, in-scope or not.
+- Premises: every claim the artifact depends on that was not read in a primary source this session. Settle it now (read the source) or tag it unverified with a probe and a fallback. An unverified premise under a hard requirement is at least `high`.
 - What is already at the bar. Do not reopen it.
 - Reward-hack check: did the last cycle raise the score by weakening a test, narrowing the objective, hiding a failure, or editing the rubric?
 
@@ -77,11 +82,11 @@ If you cannot name a `ship-block` or `high` defect with evidence, go to the stop
 
 Take the single highest-leverage **in-scope** defect. One. Say why the others wait.
 
-Priority: ship-block correctness, security, data loss, and a lying or broken primary path; then high defects that make the bar false; then objective defects that make the bar unfalsifiable; then harness blindness. Low and taste wait. Out-of-scope never gets a turn.
+Priority: ship-block correctness, security, data loss, and a lying or broken primary path; then **verdict defects** (a check, gate or acceptance rule that can reject a correct artifact or pass a wrong one — these outrank coverage gaps, because an unwinnable gate throws away good work); then high defects that make the bar false; then objective defects that make the bar unfalsifiable; then harness blindness. Low and taste wait. Out-of-scope never gets a turn.
 
 ### 4. Edit
 
-Smallest change that fully closes that defect.
+Smallest change that fully closes that defect. One defect is one root cause; closing it may touch several places. A fix that needs a second root cause is a second cycle.
 
 - Objective defect: revise the objective so it is stricter or clearer, never looser. Diff it. If any sentence became easier to satisfy, revert — that is a reward hack. Do not also edit the artifact in this cycle unless the new bar shows the artifact already fails, in which case the objective revision is the reason and the artifact fix is the edit. That cycle's receipt says `surface: objective` and shows the version change on the `objective:` line.
 - Harness defect: add, narrow, or delete one check. Leave the artifact frozen.
@@ -97,6 +102,8 @@ On failure or rejected cycle, enforce an atomic rollback (`git checkout -- .` an
 
 A test changed so the bug satisfies it is not verification. Revert it.
 
+A check you wrote yourself scores what a machine can score, not whether the mechanism is sound. When the evidence is such a check, `residual` names what it cannot see.
+
 ### 6. Harness delta
 
 One line: `unchanged`, `added <id>: <check>`, or `removed <id>: <why>`. This line is mandatory even when the selected defect was not a harness defect.
@@ -109,6 +116,7 @@ Append exactly this shape (see `references/receipt.md`):
 ## Cycle N
 objective: vX -> vY
 surface: objective | harness | artifact
+lens: attacker | operator | verdict | reality | premise
 defect: D-id (severity) — one sentence
 evidence: what you ran or traced, and what it showed
 rejected: what you considered and did not take, or none
@@ -120,11 +128,11 @@ residual: what remains open, or none at ship-block/high
 
 Stop only if **all** of these are true. Read `references/stop-gate.md` if you feel the urge to stop earlier or to continue past them.
 
-1. Last critic pass has zero `ship-block` and zero `high`.
+1. Last critic pass has zero `ship-block` and zero `high`, and the `verdict` lens has run (see Critic).
 2. You can name the next candidate defect, and it is taste, out of scope, or not worth the cost. Name it.
 3. This cycle did not weaken the objective, the tests, or the critic.
 4. The last close has real verification, not a summary.
-5. **Wraith zero-trust gate**: spawn a cold verifier sub-agent (given only the final Objective, active Harness, and final Artifact/diff with zero cycle history) or run a deterministic cold audit mapping every Bar requirement to raw output.
+5. **Wraith zero-trust gate**: spawn a cold verifier sub-agent (given only the final Objective, active Harness, and final Artifact/diff with zero cycle history) or run a deterministic cold audit mapping every Bar requirement to raw output. A script you wrote only counts as the whole gate when a machine can fully score the artifact. For a spec, design, prose or architecture it is partial: record `wraith: pass (deterministic only)` and lead `still true` with `critic was the author`.
 
 If any item fails, start the next cycle. If all pass, emit the certificate and stop talking.
 
@@ -141,6 +149,7 @@ rejected on purpose: rejected ids, one line each
 still true: honest residuals, not a disguised todo you should have done
 why another cycle won't pay: the declined candidate, and why
 wraith: pass - [cold verification summary or sub-agent receipt]
+critic: author xA, cold xC (which cycles), or author only
 capped: false
 ```
 
@@ -157,6 +166,8 @@ Full list and the reward-hack patterns: `references/forbidden.md`.
 - Bundling several defects into one cycle so the ledger looks faster.
 - Questionnaires. One question, only on an expensive architectural fork.
 - Self-praise. The certificate is a ledger.
+- Treating a green self-written check as proof the mechanism is sound.
+- Calling a script you wrote a cold audit of an artifact that needs judgement.
 - Continuing after the certificate.
 
 ## Seed harness

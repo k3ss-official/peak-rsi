@@ -1,6 +1,6 @@
 # PEAK
 
-**Skill version 1.1.0.** Install guide dated 2026-10-11.
+**Skill version 1.2.0.** Install guide dated 2026-10-11.
 
 Improve until you can't. One objective, a hostile critic, one defect per cycle, stop only when another cycle would not change a ship decision.
 
@@ -40,9 +40,9 @@ Prefer the git install. The zip has no `.git`, so it will not update.
 
 | Piece | Version | What it is |
 | --- | --- | --- |
-| Skill | 1.1.0 | `metadata.version` in `SKILL.md` frontmatter. The loop. |
+| Skill | 1.2.0 | `metadata.version` in `SKILL.md` frontmatter. The loop. |
 | Install guide | 2026-10-11 | This file. Paths below were checked against vendor docs on that date. |
-| Release | v1.0.1 | Git tag for this install layout. On 2026-10-11, `gh skill install` with no pin used `main` when the repo had a tag but no GitHub Release. The zip is `dist/peak-rsi.zip` on main. The loop in `SKILL.md` is version 1.1.0 on main; the v1.0.1 tag still carries loop 1.0.0. |
+| Release | v1.0.1 | Git tag for this install layout. On 2026-10-11, `gh skill install` with no pin used `main` when the repo had a tag but no GitHub Release. The zip is `dist/peak-rsi.zip` on main. The loop in `SKILL.md` is version 1.2.0 on main; the v1.0.1 tag still carries loop 1.0.0. |
 
 Paths move. If a directory in the table is empty on a newer build, install the canonical copy and symlink it to wherever that assistant's current docs say.
 
