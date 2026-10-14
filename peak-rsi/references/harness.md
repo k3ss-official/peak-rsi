@@ -14,6 +14,7 @@ Keep these until a receipt removes one by id.
 - **H6 Objective still binds.** After the edit, the outcome sentence is still true and no obligation got easier.
 - **H7 Security on the path you touched.** No new injection, no secret moved to the client, no check removed to make a request easier. Skip the sermon for paths the objective does not touch. Do not skip it for paths it does.
 - **H8 Narrow surface, if the deliverable is UI.** The primary path is usable near 390px wide. This check is inert for a CLI, a library, or a doc.
+- **H9 Regression lock and atomic rollback.** Every cycle's verification re-runs the evidence checks of all previously closed defects (`D1..Dn-1`). If a cycle fails or regresses an earlier fix, revert atomically to the pre-cycle anchor so zero partial edits survive.
 
 ## How a check is born
 
@@ -27,7 +28,7 @@ Write the check as something that can be failed, not a value ("be careful with d
 
 ## How a check dies
 
-Remove or narrow a check when it caused an edit the critic rejected as out of scope or taste, and it has not caught a real defect. Say so in the receipt. Do not remove a seed check because it is annoying. H4 in particular is not optional.
+Remove or narrow a check when it caused an edit the critic rejected as out of scope or taste, and it has not caught a real defect. Say so in the receipt. Do not remove a seed check because it is annoying. Both H4 and H9 are mandatory and cannot be removed.
 
 ## What the harness must not become
 

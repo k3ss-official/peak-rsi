@@ -2,53 +2,57 @@
 
 Imitate the grain, not the domain. This is a receipts page whose Export button was ignoring the active filter.
 
-The ask, already fairly sharp:
+The initial ask (v0, unsharpened):
 
-> Stop the receipts export from ignoring the active filter. Download only the filtered rows as CSV, with a header row, ISO dates, and a visible error if the download fails. Do not add Excel. Do not redesign the page.
+> Make the receipts export work properly and clean up the file download so it's ready to ship. Don't add Excel or redesign the page.
 
 ## Cycle 0
 
-objective: v1 -> v1
+objective: v0 -> v1
 surface: objective
-defect: none — accepted as given
-evidence: outcome is falsifiable (filtered rows, header, ISO dates, visible failure). Non-goals name Excel and visual redesign.
+defect: D0 (high) — objective unfalsifiable: "work properly" and "clean up" are vague
+evidence: rewritten into falsifiable contract:
+- Outcome: download only filtered rows as CSV, header row present, ISO-8601 date cells, visible error on failure.
+- Bar: checkable against unit fixtures and simulated download failure.
+- Non-goals: no Excel export, no visual redesign of the page.
+- Assumptions: A1 empty filter means all rows, not an empty file. A2 in-memory export under 10,000 rows.
 rejected: none
-harness: unchanged (seed H1–H8)
-residual: assumption A1 — an empty filter means all rows, not an empty file. Assumption A2 — a few thousand rows in memory is enough; no streaming work.
+harness: unchanged (seed H1–H9)
+residual: artifact unverified against v1 bar; anchor 7b1e2a0 recorded before any edit
 
-Gate: continue. The artifact has not been attacked yet.
+Gate: continue. The artifact has not been attacked against the v1 bar yet.
 
 ## Cycle 1
 
 objective: v1 -> v1
 surface: artifact
-defect: rejected — test edited so the unfiltered export matched the snapshot
-evidence: reverted. `export.spec` was changed from "one row when name filter is set" to "matches current dump". That makes the bug pass. H4 forbids it.
-rejected: R1 snapshot the buggy output
-harness: unchanged — H4 caught it, so no new check
-residual: D1 still open. Export calls `exportCsv(store.rows)` while the table renders `filtered`.
+defect: D1 (ship-block) — export serializes the full in-memory store instead of active filtered dataset
+evidence: unit fixture in `export.spec.ts` with 4 receipts, filter text `ada`, file has header plus 1 data row. Before edit, fixture wrote 4 data rows. H9 regression check: pass (no prior closed defect to regress).
+rejected: passing filter predicate directly into CSV writer (pollutes serializer API with UI concerns)
+harness: unchanged
+residual: D2 dates emit `Date.toString()` (`Mon Oct 11 2026 ... GMT`), failing ISO-8601 requirement in v1
 
-Gate: continue. Attempt counted. Artifact unchanged.
+Gate: continue. One high defect remains.
 
 ## Cycle 2
 
 objective: v1 -> v1
 surface: artifact
-defect: D1 (ship-block) — export serializes the full store, not the filtered view
-evidence: fixture with 4 receipts, filter text `ada`, file has the header plus 1 data row. Before the edit the same fixture wrote 4 data rows. Command: the export unit fixture in `export.spec`.
-rejected: passing the filter predicate into the CSV writer instead of the rows (extra API, not required)
-harness: unchanged
-residual: D2 dates emit `Date.toString()` (`Mon Oct 11 2026 ... GMT`), which fails the ISO obligation already in v1
+defect: rejected — loosened test assertion regex in export.spec.ts to match locale date dump instead of fixing serializer
+evidence: reverted to a4f91c2 (clean tree verified). Loosening assertion regex allowed `Mon Oct 11 2026` to pass without fixing the date serializer, violating H4 and H6. Atomic rollback executed (`git checkout -- . && git clean -fd`). `git status --porcelain` verified clean.
+rejected: R1 snapshot or accept the buggy output
+harness: added H10: Test edits must never widen assertions to match buggy output
+residual: D2 still open: date serializer emits locale strings
 
-Gate: continue. One high defect remains.
+Gate: continue. Attempt counted toward cap. Tree restored cleanly to anchor a4f91c2.
 
 ## Cycle 3
 
 objective: v1 -> v1
 surface: artifact
 defect: D2 (high) — date cells are locale strings, so a receipt cannot be reconciled
-evidence: same fixture, the date cell is `2026-10-11`. The assertion is on the cell, not on "file is non-empty".
-rejected: locale-formatted dates (easier to read, fails the bar); pulling in a date library (non-goal on dependencies)
+evidence: `export.spec.ts` fixture confirms date cell outputs `2026-10-11`; H9 regression lock: pass — re-ran D1 fixture confirming 1 filtered row + header output remains intact.
+rejected: locale-formatted dates (easier to read, fails bar); importing external date library (violates non-goal on dependencies)
 harness: unchanged
 residual: none at ship-block or high. Candidate for later: button label still says Export.
 
@@ -56,22 +60,23 @@ Gate: go to stop gate.
 
 ## Stop gate
 
-1. Critic pass after cycle 3: no ship-block, no high. Tried an empty filter (all rows, header present — matches A1), a failed blob create (error text is shown, no false "downloaded"), duplicate ids in the filter (both rows kept, no corruption).
-2. Next candidate: change the button label from Export to Download CSV. Class: taste. The bar specifies the file, not the label. Non-goal forbids a page redesign, and copy is design.
-3. Objective text is byte-identical to v1. `export.spec` assertions got stricter, not looser.
-4. Cycle 3 evidence is the ISO cell in the fixture output.
-5. Second read, same context (that harness had no subagents): a reviewer shipping against v1 would not hold the label. They would hold a wrong row set or a non-ISO date. Both are closed.
+1. **Nothing sharp left:** Critic pass after cycle 3: zero ship-block, zero high. Tested empty filter (all rows + header — matches A1), failed blob create (visible error text shown, no false success banner), duplicate IDs in filter (both rows preserved, no state corruption).
+2. **Next candidate named and declined:** Change button label from "Export" to "Download CSV". Class: taste. The bar specifies the CSV contents, not the button copy. Non-goals forbid page redesign.
+3. **The bar did not move down:** Objective text is byte-identical to v1. Harness enforces H1–H10.
+4. **The last close was verified with H9 cumulative verification:** Cycle 3 verified ISO cell in fixture output; H9 cumulative regression confirmed D1 filtered dataset serialization remains passing.
+5. **Wraith zero-trust gate:** Cold verifier sub-agent spawned with zero cycle history (given only final Objective v1, active Harness H1-H10, and final diff). Cold audit mapped all Bar requirements (filtered rows, header, ISO dates, error banner) to raw test outputs, verified all passed, and confirmed that another cycle would not change a competent ship decision.
 
 ## Certificate
 
 ```
 PEAK
-objective (final): v1 accepted as given. A1 empty filter exports all rows. A2 in-memory under a few thousand rows.
+objective (final): v1 — receipts export downloads only filtered rows as CSV with header row, ISO-8601 dates, visible error toast; A1 empty filter exports all rows; A2 in-memory under 10k rows
 cycles: 3 considered, 1 rejected, 2 artifact edits
-closed: D1 filtered rows, D2 ISO-8601 date cells
-rejected on purpose: R1 test rewritten to match the unfiltered dump
-still true: button label says Export; no Excel; no streaming export
-why another cycle won't pay: the only named leftover is button copy, which v1 does not score and the non-goals keep off the page
+closed: D1 filtered rows export, D2 ISO-8601 date formatting
+rejected on purpose: R1 test assertion loosened to match locale date dump
+still true: button label says Export; no Excel export; in-memory export under 10k rows
+why another cycle won't pay: the only named leftover is button copy, which v1 does not score and non-goals keep off the page
+wraith: pass - cold audit verified Bar items and H1-H10 against final diff
 capped: false
 ```
 

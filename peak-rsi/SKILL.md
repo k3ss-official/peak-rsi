@@ -57,7 +57,7 @@ Each cycle, in this order. Do not skip.
 
 ### 1. State
 
-One short block before you edit: objective version, what is frozen, open defects, assumptions still in force.
+One short block before you edit: objective version, what is frozen, open defects, assumptions still in force, and the pre-cycle rollback anchor (`git rev-parse --short HEAD` in a repo, or pre-edit snapshot). You must record this anchor before touching any file.
 
 ### 2. Critic
 
@@ -91,6 +91,10 @@ Smallest change that fully closes that defect.
 
 Re-check the closed defect with evidence: a command and its output, a traced input and result, a failing case that now fails the right way. If you cannot produce evidence, the cycle has not closed. Fix or revert. Narrative does not count.
 
+Run cumulative regression checks (`H9`) on all previously closed defects (`D1..Dn-1`). Every cycle's verification must confirm that prior fixes remain intact.
+
+On failure or rejected cycle, enforce an atomic rollback (`git checkout -- .` and `git clean -fd` in a repo, or pre-edit snapshot restore) back to the pre-cycle anchor, and verify `git status --porcelain` is clean. Zero partial edits may survive a failed or rejected cycle.
+
 A test changed so the bug satisfies it is not verification. Revert it.
 
 ### 6. Harness delta
@@ -120,7 +124,7 @@ Stop only if **all** of these are true. Read `references/stop-gate.md` if you fe
 2. You can name the next candidate defect, and it is taste, out of scope, or not worth the cost. Name it.
 3. This cycle did not weaken the objective, the tests, or the critic.
 4. The last close has real verification, not a summary.
-5. A colder second read agrees: another cycle would not change a competent reviewer's ship decision. If your harness lets you start a fresh-context reviewer (a subagent that has not seen your ledger), give it the objective and the artifact and ask it that question. Otherwise reread both as if you had not written them. Say in the gate which kind of read it was.
+5. **Wraith zero-trust gate**: spawn a cold verifier sub-agent (given only the final Objective, active Harness, and final Artifact/diff with zero cycle history) or run a deterministic cold audit mapping every Bar requirement to raw output.
 
 If any item fails, start the next cycle. If all pass, emit the certificate and stop talking.
 
@@ -136,10 +140,11 @@ closed: defect ids, each verified in some receipt
 rejected on purpose: rejected ids, one line each
 still true: honest residuals, not a disguised todo you should have done
 why another cycle won't pay: the declined candidate, and why
+wraith: pass - [cold verification summary or sub-agent receipt]
 capped: false
 ```
 
-If you hit the cap without a clean gate, `capped: true`, and `still true` leads with the defect you would have taken next.
+If you hit the cap without a clean gate, `capped: true`, `wraith: fail - capped`, and `still true` leads with the defect you would have taken next.
 
 ## Forbidden
 
