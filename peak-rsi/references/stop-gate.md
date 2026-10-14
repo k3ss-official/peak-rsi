@@ -6,11 +6,13 @@ The loop stops when you can't, not when you won't.
 
 ## All five, or you loop
 
-1. **Nothing sharp left.** The latest critic pass listed no `ship-block` and no `high`. If the critic "found nothing" but did not actually try to break the primary path and the edges in the bar, this item fails. Run the critic again for real.
+1. **Nothing sharp left.** The latest critic pass listed no `ship-block` and no `high`, and the `verdict` lens has run (again, if a test, gate or acceptance rule changed since). If the critic "found nothing" but did not actually try to break the primary path and the edges in the bar, this item fails. Run the critic again for real, with a different lens.
 2. **The next edit is named and declined.** Write the candidate in one sentence. Classify it `taste`, `out-of-scope`, or `not worth the cost`. "I can't think of anything" is not a classification. If you cannot name a candidate, the critic has not tried hard enough. Run it again against the primary path and the edges in the bar, then name what it found, even if that is taste.
 3. **The bar did not move down.** Compare the objective text to the previous cycle. Compare the tests to the previous cycle. Any obligation that got easier fails the gate, even if the artifact is genuinely better.
 4. **The last close was verified with H9 cumulative verification.** Point at the evidence in that cycle's receipt, including `H9` cumulative regression checks confirming that all previously closed defects (`D1..Dn-1`) remain passing. If the last cycle was cycle 0 (no artifact defect existed), verification is "the bar is falsifiable," and you still needed a critic pass against the artifact.
 5. **Wraith zero-trust gate.** Require cold verification stripped of author context, cycle history, and cognitive bias. Spawn a cold verifier sub-agent (given only the final Objective, active Harness, and final Artifact/diff with zero cycle history) or run a deterministic cold audit directly mapping every Bar requirement to raw output. The cold verifier must independently confirm that the artifact satisfies the bar and that another cycle would not change a ship decision. Record `wraith: pass - [proof]` on the certificate. If the cold verifier uncovers a defect, the gate fails: return to select.
+
+   A script you wrote is a cold audit only for an artifact a machine can fully score. For a spec, design, prose or architecture it checks structure and cannot judge soundness, and its author is still the critic. Prefer a sub-agent. If none is available, record `wraith: pass (deterministic only)`, put `critic was the author` first in `still true`, and set the certificate's `critic:` line to `author only`.
 
 ## Feelings that are not a gate
 
@@ -43,3 +45,5 @@ Certificate fields when the gate is not clean:
 - Do not pretend the gate passed.
 
 The cap exists so "until you can't" cannot be gamed into an infinite polish loop. It is a failure mode when it binds. Do not aim for it.
+
+When it binds, the defect you name for cycle 9 should be the one you ranked next under the normal priority, not the cheapest one. If a verdict defect and a coverage gap are both open, the verdict defect was the one to close first, so say which you would have taken and why.
