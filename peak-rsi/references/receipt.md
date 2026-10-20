@@ -31,7 +31,7 @@ Rules:
 
 ## Rejected attempt
 
-If you edit and then revert inside the same cycle, still write the cycle. Surface stays what you attempted. Require an atomic restore to the Step 1 anchor (`git checkout -- .` and `git clean -fd` in a repo, or restoring pre-edit snapshot) with `reverted to <anchor> (clean tree verified)` in the evidence line. Defect line says `rejected`. The harness delta records the new check if the attempt revealed a blind spot. A rejected attempt counts toward the cap. It should. That is the point of the cap.
+If you edit and then revert inside the same cycle, still write the cycle. Surface stays what you attempted. Restore per the rollback rule in `SKILL.md`: reset and clean only when `stash: none`, or after a successful `git stash push -u`, then pop. Evidence includes `reverted to <anchor>` and either `clean tree verified`, `stash popped`, or `rollback conflict`. Defect line says `rejected`. The harness delta records the new check if the attempt revealed a blind spot. A rejected attempt counts toward the cap. It should. That is the point of the cap.
 
 ## Certificate
 

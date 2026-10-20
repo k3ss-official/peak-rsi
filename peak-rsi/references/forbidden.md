@@ -11,7 +11,14 @@ These look like momentum. They are how a loop pretends to be recursive self-impr
 - Changing a type so the failing call is no longer type-checked, without handling the case.
 - Editing this skill's severities mid-loop so a ship-block becomes taste.
 
-Response: revert the edit. Receipt marks `rejected`. If an existing check caught the hack, name it in the harness line and add nothing. If no check would have caught it, add one that would. The reverted state is the start of the next cycle.
+Response: revert the edit. Receipt marks `rejected`. If an existing check caught the hack, name it in the harness line and add nothing. If no check would have caught it, add one that would. The reverted state is the start of the next cycle. Roll back with the rule in `SKILL.md`. Do not `git clean` a tree you did not stash.
+
+## Dirty-tree rollback
+
+- `git checkout -- .` used as a rollback. It restores from the index. A staged edit survives.
+- `git reset --hard` or `git clean -fd` when porcelain was non-empty at the anchor and that work was not stashed first.
+
+Response: the cycle is rejected. If pre-cycle work is already gone, say so in the receipt. Do not claim the tree was clean.
 
 ## Fake improvement
 
