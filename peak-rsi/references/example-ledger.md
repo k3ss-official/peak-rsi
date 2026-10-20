@@ -42,7 +42,7 @@ objective: v1 -> v1
 surface: artifact
 lens: verdict
 defect: rejected — loosened test assertion regex in export.spec.ts to match locale date dump instead of fixing serializer
-evidence: reverted to a4f91c2 (clean tree verified). Loosening assertion regex allowed `Mon Oct 11 2026` to pass without fixing the date serializer, violating H4 and H6. Atomic rollback executed (`git checkout -- . && git clean -fd`). `git status --porcelain` verified clean.
+evidence: reverted to a4f91c2 (clean tree verified). Tree was clean at the anchor (`stash: none`), so a full-tree restore was legal. Loosening assertion regex allowed `Mon Oct 11 2026` to pass without fixing the date serializer, violating H4 and H6. Atomic rollback executed (`git reset --hard HEAD && git clean -fd`). `git status --porcelain` verified clean.
 rejected: R1 snapshot or accept the buggy output
 harness: added H11: Test edits must never widen assertions to match buggy output
 residual: D2 still open: date serializer emits locale strings

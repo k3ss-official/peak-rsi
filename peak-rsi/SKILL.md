@@ -11,7 +11,7 @@ description: >
   trading indicator, and not for peak in its everyday sense (peak hours,
   peak load).
 metadata:
-  version: "1.2.0"
+  version: "1.2.1"
 ---
 
 # PEAK
@@ -57,7 +57,9 @@ Each cycle, in this order. Do not skip.
 
 ### 1. State
 
-One short block before you edit: objective version, what is frozen, open defects, assumptions still in force, and the pre-cycle rollback anchor (`git rev-parse --short HEAD` in a repo, or pre-edit snapshot). You must record this anchor before touching any file.
+One short block before you edit: objective version, what is frozen, open defects, assumptions still in force, and the pre-cycle rollback anchor. Record it before touching any file.
+
+The anchor is the working tree, not HEAD. In a repo, record `git rev-parse --short HEAD` and `git status --porcelain`. If porcelain is non-empty, run `git stash push -u -m "peak-anchor cycle N"` and record `git rev-parse --short stash`. If that stash fails, do not edit. If porcelain is empty, record `stash: none`. Outside git, snapshot only the files you will touch.
 
 ### 2. Critic
 
@@ -98,7 +100,16 @@ Re-check the closed defect with evidence: a command and its output, a traced inp
 
 Run cumulative regression checks (`H9`) on all previously closed defects (`D1..Dn-1`). Every cycle's verification must confirm that prior fixes remain intact.
 
-On failure or rejected cycle, enforce an atomic rollback (`git checkout -- .` and `git clean -fd` in a repo, or pre-edit snapshot restore) back to the pre-cycle anchor, and verify `git status --porcelain` is clean. Zero partial edits may survive a failed or rejected cycle.
+On failure or rejected cycle, drop this cycle's edits and nothing else.
+
+- `stash: none`: `git reset --hard HEAD`, then `git clean -fd`. Porcelain must be empty. `git checkout -- .` is not a rollback. It copies the index, so a staged edit survives.
+- Stash taken: the same reset and clean, then `git stash pop`. Legal only because the pre-cycle work is already in the stash. If the pop conflicts, stop. Do not drop the stash and do not pick a side. Evidence: `rollback conflict`.
+- Never reset or clean a dirty tree you did not stash first. `git clean -fd` removes every untracked file, not just yours.
+- No git: restore the snapshot. Delete only files this cycle created.
+
+On an accepted cycle, pop the stash if you took one. On conflict, keep the stash and name it in the receipt. Do not drop it.
+
+None of this cycle's edits may survive a reject. Pre-cycle dirty work must survive either outcome.
 
 A test changed so the bug satisfies it is not verification. Revert it.
 

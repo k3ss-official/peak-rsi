@@ -14,7 +14,7 @@ Keep these until a receipt removes one by id.
 - **H6 Objective still binds.** After the edit, the outcome sentence is still true and no obligation got easier.
 - **H7 Security on the path you touched.** No new injection, no secret moved to the client, no check removed to make a request easier. Skip the sermon for paths the objective does not touch. Do not skip it for paths it does.
 - **H8 Narrow surface, if the deliverable is UI.** The primary path is usable near 390px wide. This check is inert for a CLI, a library, or a doc.
-- **H9 Regression lock and atomic rollback.** Every cycle's verification re-runs the evidence checks of all previously closed defects (`D1..Dn-1`). If a cycle fails or regresses an earlier fix, revert atomically to the pre-cycle anchor so zero partial edits survive.
+- **H9 Regression lock and atomic rollback.** Every cycle's verification re-runs the evidence checks of all previously closed defects (`D1..Dn-1`). If a cycle fails or regresses an earlier fix, revert to the pre-cycle anchor per `SKILL.md` so none of this cycle's edits survive and pre-cycle dirty work does too. `git checkout -- .` does not do that.
 - **H10 Premises.** Every claim the artifact depends on was read in a primary source this session, or is tagged unverified with a probe and a fallback. A premise under a hard requirement with neither is a `high` defect.
 
 ## How a check is born
